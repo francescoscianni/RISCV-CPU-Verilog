@@ -3,4 +3,5 @@
 *.ys
 
 cpu_sim/
+.DS_Store
 
