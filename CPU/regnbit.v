@@ -22,7 +22,7 @@ module pc_reg #(parameter N = 32)(
 );
     always @(posedge clk) begin
         if (reset)
-            dataOut <= 32'h00000010;  //Valore iniziale 0001_0000
+            dataOut <= 32'h00000000;  //Valore iniziale 0001_0000
         else if (en)
             dataOut <= dataIn;
     end

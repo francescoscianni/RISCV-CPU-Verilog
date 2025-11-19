@@ -39,7 +39,7 @@ module cpu_tb;
         reset = 0;
 
         // Run for enough cycles to execute all instructions
-        repeat (15) @(posedge clk);
+        repeat (50) @(posedge clk);
 
         $display("\nFinal Register File Contents:");
         for (idx = 0; idx < 32; idx = idx + 1) begin
