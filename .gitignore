@@ -1,0 +1,6 @@
+*.vcd
+*.vvp
+*.ys
+
+cpu_sim/
+
