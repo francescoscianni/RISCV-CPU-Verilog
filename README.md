@@ -137,7 +137,6 @@ JAL x0, 0   # END instruction
 ---
 
 ## Future work
-- Expand ISA: AND, OR, XOR, SUB, SLT
 - Complete Python-based assembler in `Files/`
 - Implement pipelined CPU
 - Synthesize on FPGA
