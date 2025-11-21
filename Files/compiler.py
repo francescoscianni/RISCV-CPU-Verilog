@@ -1,5 +1,3 @@
-import sys
-
 def to_bin(val, bits):
     val = int(val)
     if val < 0:
@@ -31,8 +29,8 @@ def assemble(line):
 
     try:
         match instr:
-            # --- R-TYPE Instructions ---
-            # Format: funct7 | rs2 | rs1 | funct3 | rd | opcode
+            #R-TYPE Instructions
+            #Format: funct7 | rs2 | rs1 | funct3 | rd | opcode
             case 'add' | 'sub' | 'sll' | 'slt' | 'xor' | 'srl' | 'or' | 'and':
                 rd = get_reg(parts[1])
                 rs1 = get_reg(parts[2])
@@ -46,8 +44,8 @@ def assemble(line):
                 
                 machine_code = f"{funct7}{rs2}{rs1}{funct3_map[instr]}{rd}{OP_R_TYPE}"
 
-            # --- I-TYPE Instructions ---
-            # Format: imm[11:0] | rs1 | funct3 | rd | opcode
+            #I-TYPE Instructions
+            #Format: imm[11:0] | rs1 | funct3 | rd | opcode
             case 'addi' | 'slti' | 'xori' | 'ori' | 'andi' | 'slli' | 'srli':
                 rd = get_reg(parts[1])
                 rs1 = get_reg(parts[2])
@@ -60,9 +58,9 @@ def assemble(line):
                 
                 machine_code = f"{imm}{rs1}{funct3_map[instr]}{rd}{OP_I_TYPE}"
 
-            # --- LOAD Instruction (lw) ---
-            # Format: imm[11:0] | rs1 | funct3 | rd | opcode
-            # Syntax: lw rd, offset(rs1)
+            #LOAD Instruction (lw)
+            #Format: imm[11:0] | rs1 | funct3 | rd | opcode
+            
             case 'lw':
                 rd = get_reg(parts[1])
                 mem_part = parts[2]
@@ -71,15 +69,14 @@ def assemble(line):
                 
                 imm = to_bin(offset_str, 12)
                 rs1 = get_reg(base_str)
-                funct3 = "010" # LW width
+                funct3 = "010" #LW
                 
                 machine_code = f"{imm}{rs1}{funct3}{rd}{OP_LOAD}"
 
-            # --- STORE Instruction (sw) ---
-            # Format: imm[11:5] | rs2 | rs1 | funct3 | imm[4:0] | opcode
-            # Syntax: sw rs2, offset(rs1)
+            #STORE Instruction (sw) 
+            #Format: imm[11:5] | rs2 | rs1 | funct3 | imm[4:0] | opcode
             case 'sw':
-                rs2 = get_reg(parts[1]) # Source register
+                rs2 = get_reg(parts[1])
                 mem_part = parts[2]
                 offset_str = mem_part.split('(')[0]
                 base_str = mem_part.split('(')[1].replace(')', '')
@@ -87,41 +84,39 @@ def assemble(line):
                 imm_val = int(offset_str)
                 rs1 = get_reg(base_str)
                 
-                # Split immediate for S-Type
+                #Split immediate for S-Type
                 imm_bin = to_bin(imm_val, 12)
                 imm_11_5 = imm_bin[0:7]
                 imm_4_0 = imm_bin[7:12]
-                funct3 = "010" # SW width
+                funct3 = "010" #SW
 
                 machine_code = f"{imm_11_5}{rs2}{rs1}{funct3}{imm_4_0}{OP_STORE}"
 
-            # --- BRANCH Instruction (beq) ---
-            # Format: imm[12]|imm[10:5]|rs2|rs1|funct3|imm[4:1]|imm[11]|opcode
+            #BRANCH Instruction (beq)
+            #Format: imm[12]|imm[10:5]|rs2|rs1|funct3|imm[4:1]|imm[11]|opcode
             case 'beq':
                 rs1 = get_reg(parts[1])
                 rs2 = get_reg(parts[2])
                 imm_val = int(parts[3])
                 imm_bin = to_bin(imm_val, 13) 
-                
-                # Bit shuffling per B-Type
+        
                 imm_12 = imm_bin[0]
                 imm_11 = imm_bin[1]
                 imm_10_5 = imm_bin[2:8]
                 imm_4_1 = imm_bin[8:12]
                 
-                funct3 = "000" # BEQ
+                funct3 = "000" #BEQ
                 
                 machine_code = f"{imm_12}{imm_10_5}{rs2}{rs1}{funct3}{imm_4_1}{imm_11}{OP_BRANCH}"
 
-            # --- JUMP Instruction (jal) ---
-            # Format: imm[20]|imm[10:1]|imm[11]|imm[19:12]|rd|opcode
+            #JUMP Instruction (jal)
+            #Format: imm[20]|imm[10:1]|imm[11]|imm[19:12]|rd|opcode
             case 'jal':
                 rd = get_reg(parts[1])
                 imm_val = int(parts[2])
                 
                 imm_bin = to_bin(imm_val, 21)
-                
-                # Bit shuffling per J-Type
+        
                 imm_20 = imm_bin[0]
                 imm_19_12 = imm_bin[1:9]
                 imm_11 = imm_bin[9]
@@ -132,7 +127,7 @@ def assemble(line):
             case _:
                 return f"// Unknown instruction: {instr}"
 
-        # Convert Binary string to Hex (8 chars)
+        #Convert Binary string to Hex (8 chars)
         hex_val = f"{int(machine_code, 2):08x}"
         return hex_val
 
@@ -140,15 +135,23 @@ def assemble(line):
         return f"// Error assembling {line}: {e}"
 
 if __name__ == '__main__':
-    asm_code = [
-        "addi x1, x0, 2",   
-        "addi x2, x1, 5",   
-        "sw x2, 0(x0)",     
-        "lw x3, 0(x0)",     
-        "add x4, x2, x3"  
-    ]
+    input_file = 'assembly.asm'
     
-    print("// Generated Machine Code (Hex)")
-    for line in asm_code:
-        res = assemble(line)
-        print(res)
+    #Check if file exists
+    try:
+        with open(input_file, 'r') as f:
+            lines = f.readlines()
+            
+        print(f"Compiling {input_file}...")
+        for i in range(16): #Number of empty memory locations before code
+            print("00000000") #Empty space for writing memory
+        
+        for i, line in enumerate(lines):
+            hex_code = assemble(line)
+            if hex_code:
+                print(hex_code) #Instructions
+                
+        print("0000006F") #END instruction (JAL x0, 0)
+                
+    except FileNotFoundError:
+        print(f"Error: Could not find file '{input_file}'")

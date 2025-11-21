@@ -99,29 +99,3 @@ module cpu (
     );
 
 endmodule
-//cpu.v alu_decoder.v alu.v cu.v extend.v instr_decoder.v main_fsm.v mux2_1.v mux3_1.v ram.v regfile.v regnbit.v
-
-//opcode[15:13]
-//alu_function[12:11]
-//rd[10:8]
-//rs1[7:5]
-//rs2[2:0]
-//Imm[4:3]
-
-//opcode:
-//LOAD 000
-//STORE 001
-//R-TYPE 010
-//I-TYPE 011
-
-//ALU FUNCTION
-
-//DATA MEMORY:0000_0000 - 0000_1111
-//INSTRUCTION MEMORY: 0001_0000 - 1111_1111
-
-// ADDI x1, x0, 5       -> x1 = 5
-// ADDI x2, x1, 3      -> x2 = 8
-// SW x2, 0(x0)        -> mem[0] = 8
-// 011_00_001_000_00101
-// 010_00_010_001_00011
-// 001_00_010_001_00000

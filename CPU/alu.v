@@ -22,4 +22,3 @@ always @(*) begin
 end
 
 endmodule
-//cpu.v alu.v cu.v mux2_1.v extend.v mux3_1.v ram.v regfile.v regnbit.v
