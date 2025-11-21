@@ -29,7 +29,7 @@ sudo apt-get install iverilog gtkwave
 ```
 
 ### Windows
-Download the Windows installer for Icarus Verilog and ensure the executables are added to your PATH.
+Download the Windows installer for Icarus Verilog.
 
 ---
 
@@ -61,7 +61,7 @@ gtkwave cpu_tb.vcd
 ```
 ---
 
-## 📝 Customizing the Program
+## Customizing the Program
 
 ### **1. Write your assembly program**
 Edit the file:
@@ -106,7 +106,7 @@ vvp cpu_sim
 
 ---
 
-## 📌 Additional Notes
+## Additional Notes
 
 ### **Memory Layout**
 The Python compiler inserts **16 empty memory locations (32-bit words)** before your code:
@@ -136,7 +136,7 @@ JAL x0, 0   # END instruction
 
 ---
 
-## 🔮 Future Roadmap
+## Future work
 - Expand ISA: AND, OR, XOR, SUB, SLT
 - Complete Python-based assembler in `Files/`
 - Implement pipelined CPU
