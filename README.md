@@ -62,11 +62,77 @@ gtkwave cpu_tb.vcd
 ---
 
 ## 📝 Customizing the Program
-To run your own RISC-V machine code:
-1. Write your assembly code in the file
-3. Run `File/compiler.py`
-4. Copy the output of the program in `CPU/prog.mem`
-5. Follow the steps of 2. Compile the design
+
+### **1. Write your assembly program**
+Edit the file:
+
+```
+Files/assembly.asm
+```
+
+and add your RISC-V instructions.
+
+---
+
+### **2. Compile the assembly into machine code**
+Run the Python compiler:
+
+```bash
+python3 Files/compiler.py
+```
+
+This generates a sequence of 32-bit instructions in hexadecimal.
+
+---
+
+### **3. Load the machine code into the CPU**
+Copy the compiler output into:
+
+```
+CPU/prog.mem
+```
+
+This file is read at simulation startup and loaded into the instruction memory.
+
+---
+
+### **4. Recompile and simulate**
+Return to the `CPU/` directory and compile the design:
+
+```bash
+iverilog -o cpu_sim *.v
+vvp cpu_sim
+```
+
+---
+
+## 📌 Additional Notes
+
+### **Memory Layout**
+The Python compiler inserts **16 empty memory locations (32-bit words)** before your code:
+
+```python
+(151) for i in range(16):   # Number of empty memory locations before code
+```
+
+You may increase or decrease this number.  
+If you change it, update the program counter starting value inside:
+
+```
+CPU/regnbit.v
+```
+
+to match the new starting address.
+
+---
+
+### **End of Program Instruction**
+To mark the end of the program, `compiler.py` uses:
+
+```
+JAL x0, 0   # END instruction
+```
+
 
 ---
 
